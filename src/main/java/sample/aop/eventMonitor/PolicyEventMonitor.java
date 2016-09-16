@@ -17,24 +17,20 @@
 package sample.aop.eventMonitor;
 
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import sample.aop.dao.IPolicyDao;
-import sample.aop.dao.PolicyDaoImpl;
-import sample.aop.event.AutoPolicyIssueEvent;
 import sample.aop.event.PolicyIssueEvent;
 
 @Aspect
 @Component
 public class PolicyEventMonitor {
 
-	static final Logger logger = LoggerFactory.getLogger(PolicyEventMonitor.class);
+	private static final Logger logger = LoggerFactory.getLogger(PolicyEventMonitor.class);
 
 	@Autowired
 	private IPolicyDao		 		policyDao;
@@ -42,7 +38,8 @@ public class PolicyEventMonitor {
 
 	@AfterReturning("execution(* sample.aop.event.PolicyEventListenerImpl.onApplicationEvent(..))")
 	public void policyEventProcessed(JoinPoint parmJoinPoint) {
-		// We be intercepted
+
+		logger.info("************************");
 		logger.info("In AOP Intercept - After exec of the onApplicationEvent");
 		logger.info("onApplicationEvent in PolicyEventListener just executed!");
 		logger.info("Intercepted Method [{}] : ", parmJoinPoint.getSignature().getName());
@@ -53,7 +50,6 @@ public class PolicyEventMonitor {
 		logger.info("************************");
 
 		try{
-			// Ok stash event in dao for now..make beleive it is a queue.....yeah:)
 			policyDao.persistPolicyEvent(policyEvent);
 		} catch(Exception ex ) {
 			logger.error("Exception Caught from DAO layer");
