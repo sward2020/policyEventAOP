@@ -34,7 +34,7 @@ import sample.aop.event.PolicyIssueEvent;
 @Component
 public class PolicyEventMonitor {
 
-	static final Logger logger = LoggerFactory.getLogger(PolicyEventMonitor.class);
+	private static final Logger logger = LoggerFactory.getLogger(PolicyEventMonitor.class);
 
 	@Autowired
 	private IPolicyDao		 		policyDao;
@@ -42,7 +42,9 @@ public class PolicyEventMonitor {
 
 	@AfterReturning("execution(* sample.aop.event.PolicyEventListenerImpl.onApplicationEvent(..))")
 	public void policyEventProcessed(JoinPoint parmJoinPoint) {
-		// We be intercepted
+		logger.info("************************");
+		logger.info("************************");
+		logger.info("************************");
 		logger.info("In AOP Intercept - After exec of the onApplicationEvent");
 		logger.info("onApplicationEvent in PolicyEventListener just executed!");
 		logger.info("Intercepted Method [{}] : ", parmJoinPoint.getSignature().getName());
@@ -51,9 +53,10 @@ public class PolicyEventMonitor {
 		PolicyIssueEvent policyEvent  = (PolicyIssueEvent) parmJoinPoint.getArgs()[0];
 		logger.info("Sending PolicyIssueEvent with Policy [{}] to queue...", policyEvent.getPolicy().getPolicyName());
 		logger.info("************************");
+		logger.info("************************");
+		logger.info("************************");
 
 		try{
-			// Ok stash event in dao for now..make beleive it is a queue.....yeah:)
 			policyDao.persistPolicyEvent(policyEvent);
 		} catch(Exception ex ) {
 			logger.error("Exception Caught from DAO layer");
