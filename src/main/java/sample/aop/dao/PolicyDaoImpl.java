@@ -16,14 +16,12 @@ import sample.aop.event.PolicyIssueEvent;
 
 import java.util.*;
 
-/**
- * Created by n0292928 on 8/31/16.
- */
 @Repository("policyDao")
 public class PolicyDaoImpl implements IPolicyDao {
 
         static final Logger logger = LoggerFactory.getLogger(PolicyDaoImpl.class);
 
+        private Set<PolicyIssueEvent> repoPolicyEvents;
         public static final String DROP_POLICY_TABLE 	= "DROP TABLE Policy IF EXISTS";
         public static final String	CREATE_POLICY_TABLE = "CREATE TABLE policy(policyId SMALLINT, policyName VARCHAR(128), policyStatus VARCHAR(128)," +
                                                   " policyCustomerName VARCHAR(128), policyCustomerId SMALLINT, policyAssetValue DECIMAL(10,2)," +
@@ -33,20 +31,14 @@ public class PolicyDaoImpl implements IPolicyDao {
                                                         " policyCustomerId, policyAssetValue, policyBasePremium, policyPremium ) " +
                                                         " VALUES (?,?,?,?,?,?,?,?) ";
 
-        private Set<PolicyIssueEvent> repoPolicyEvents;
-
         @Autowired
         private JdbcTemplate            jdbcTemplate;
 
-
-        //Constructor
         public PolicyDaoImpl() {
             this.repoPolicyEvents = new HashSet<PolicyIssueEvent>();
          }
-        // Getter
         public Set<PolicyIssueEvent> getRepoPolicyEvents() { return repoPolicyEvents;  }
 
-        // Public Methods
         public AbstractPolicy createPolicy(final String parmType)  {
             AbstractPolicy  objPolicy=null;
 
